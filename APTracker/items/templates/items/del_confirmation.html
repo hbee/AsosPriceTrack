@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="POST" action="">
+    {% csrf_token %}
+    <h5>Are you sure you want to stop tracking this product ? </h5> <br> <h3>{{object.name}}</h3> <br>
+    <button type="submit" class="btn btn-primary">Stop tracking</button>
+</form>
+{% endblock content %}
+

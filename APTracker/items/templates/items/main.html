@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load colorize %}
+
+{% block content %}
+<h1> Welcome to Asos Price Tracker </h1>
+
+<!-- Modal -->
+<div class="modal fade" id="AddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Track a new product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST" autocomplete="off">
+                    {% csrf_token %}
+                    {{form|crispy}}
+                    <button type="submit" class="btn btn-primary mt-2">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#AddModal">Add</button>
+        <a href="{% url 'items.update' %}">
+            <button class="btn btn-info">Update</button>
+        </a>
+    </div>
+    <div class="col" style="text-align: right">
+        <div>Total number of items being tracked: {{items_no}}</div>
+        <div>Discounted items: {{discounted_no}}</div>
+    </div>
+</div>
+
+{% if qs %}
+    {% for item in qs %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5>{{item.name}}</h5>
+                <a href="{% url 'items.delete' item.pk %}"> <button class="btn btn-danger">Delete</button> </a>
+            </div>
+            <div class="card-body">
+                <div class="blockquote">
+                    <div>current price (EUR) : {{item.current_price}}</div>
+                    <div>previous price (EUR) : {{item.old_price}}</div>
+                    <div>difference : {{item.price_difference|colorize}}</div>
+                    <div>link : <a href="{{item.url}}">Go to the product page</a> </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <h3>No items are bieng tracked</h3>
+{% endif %}
+
+{% endblock content %}
